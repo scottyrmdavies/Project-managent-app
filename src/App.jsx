@@ -1,7 +1,11 @@
 import './App.css'
+import { useCalidwellProgram } from './hooks/useCalidwellProgram'
+import { formatCurrency, formatNumber } from './utils/formatters'
 
 function App() {
-  const jobs = [
+  const { job: programJob, status: programStatus, error: programError } = useCalidwellProgram()
+
+  const baseJobs = [
     {
       id: 'JOB-1042',
       name: 'Riverfront Apartments',
@@ -12,6 +16,7 @@ function App() {
       startDate: 'Mar 3, 2025',
       endDate: 'Dec 18, 2025',
       progress: 48,
+      plannedCost: 126_000_000,
     },
     {
       id: 'JOB-1038',
@@ -23,6 +28,7 @@ function App() {
       startDate: 'Jan 20, 2025',
       endDate: 'Nov 5, 2025',
       progress: 62,
+      plannedCost: 58_500_000,
     },
     {
       id: 'JOB-1030',
@@ -34,6 +40,7 @@ function App() {
       startDate: 'Feb 10, 2025',
       endDate: 'Jun 30, 2026',
       progress: 15,
+      plannedCost: 92_400_000,
     },
     {
       id: 'JOB-1024',
@@ -45,8 +52,49 @@ function App() {
       startDate: 'Nov 14, 2024',
       endDate: 'Aug 22, 2025',
       progress: 73,
+      plannedCost: 34_800_000,
     },
   ]
+
+  const jobs = programJob
+    ? [
+        {
+          id: programJob.id,
+          name: programJob.name,
+          client: programJob.client,
+          location: programJob.location,
+          superintendent: programJob.superintendent,
+          status: programJob.status,
+          startDate: programJob.startDate
+            ? new Date(programJob.startDate).toLocaleDateString('en-GB', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })
+            : 'TBC',
+          endDate: programJob.endDate
+            ? new Date(programJob.endDate).toLocaleDateString('en-GB', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric',
+              })
+            : 'TBC',
+          progress: Math.min(
+            100,
+            Math.round(
+              (programJob.phases.reduce((set, phase) => {
+                phase.activities.forEach((activity) => set.add(activity.weekStart))
+                return set
+              }, new Set()).size /
+                Math.max(programJob.phases.length, 1)) *
+                100,
+            ),
+          ),
+          plannedCost: programJob.plannedCost,
+        },
+        ...baseJobs,
+      ]
+    : baseJobs
 
   return (
     <main className="app-shell">
@@ -94,6 +142,10 @@ function App() {
                 </dd>
               </div>
               <div>
+                <dt>Planned Cost</dt>
+                <dd>{formatCurrency(job.plannedCost)}</dd>
+              </div>
+              <div>
                 <dt>Completion</dt>
                 <dd>
                   <div className="progress">
@@ -105,6 +157,107 @@ function App() {
             </dl>
           </article>
         ))}
+      </section>
+
+      <section className="program-panel">
+        <header className="program-header">
+          <div>
+            <p className="eyebrow">Imported data</p>
+            <h2>Programs For Calidwell</h2>
+            <p className="subtitle">
+              Live quantities and prices synced from the shared spreadsheet. Use this panel to
+              monitor budget exposure ahead of procurement.
+            </p>
+          </div>
+          <span className={`status status--${programJob ? 'on-schedule' : 'in-procurement'}`}>
+            {programStatus === 'loading' && 'Loading…'}
+            {programStatus === 'error' && 'Refresh required'}
+            {programStatus === 'success' && 'Synced'}
+            {programStatus === 'idle' && 'Ready'}
+          </span>
+        </header>
+
+        {programError ? (
+          <div className="program-error">
+            <p>There was a problem fetching the Calidwell program data.</p>
+            <p className="hint">{programError.message}</p>
+          </div>
+        ) : (
+          <>
+            <dl className="program-metrics">
+              <div>
+                <dt>Planned Cost</dt>
+                <dd>
+                  {programJob ? formatCurrency(programJob.plannedCost) : <span className="skeleton" />}
+                </dd>
+              </div>
+              <div>
+                <dt>Planned Man Days</dt>
+                <dd>
+                  {programJob ? formatNumber(programJob.plannedManDays) : <span className="skeleton" />}
+                </dd>
+              </div>
+              <div>
+                <dt>Work Packages</dt>
+                <dd>
+                  {programJob ? programJob.phases.length : <span className="skeleton" />}
+                </dd>
+              </div>
+              <div>
+                <dt>Weeks Covered</dt>
+                <dd>
+                  {programJob ? (
+                    programJob.phases.reduce((set, phase) => {
+                      phase.activities.forEach((activity) => set.add(activity.weekLabel))
+                      return set
+                    }, new Set()).size
+                  ) : (
+                    <span className="skeleton" />
+                  )}
+                </dd>
+              </div>
+            </dl>
+
+            <div className="program-table-wrapper">
+              <table className="program-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Phase</th>
+                    <th scope="col">Planned cost</th>
+                    <th scope="col">Man days</th>
+                    <th scope="col">Upcoming activity</th>
+                    <th scope="col">Next week</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {(programJob?.phases ?? []).slice(0, 8).map((phase) => {
+                    const upcoming = phase.activities.find((activity) =>
+                      activity.weekStart ? new Date(activity.weekStart) >= new Date() : false,
+                    )
+                    return (
+                      <tr key={phase.id}>
+                        <th scope="row">{phase.name}</th>
+                        <td>{formatCurrency(phase.totalPlannedCost)}</td>
+                        <td>{formatNumber(phase.totalPlannedManDays)}</td>
+                        <td>{upcoming?.label ?? phase.activities[0]?.label ?? '—'}</td>
+                        <td>{upcoming?.weekLabel ?? '—'}</td>
+                      </tr>
+                    )
+                  })}
+                  {!programJob && (
+                    <tr>
+                      <td colSpan={5}>
+                        <div className="program-placeholder">
+                          <span className="skeleton" />
+                        </div>
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </section>
     </main>
   )

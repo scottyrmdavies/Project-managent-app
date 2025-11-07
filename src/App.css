@@ -130,6 +130,11 @@
   color: #334155;
 }
 
+.status--planning {
+  background: rgba(129, 140, 248, 0.18);
+  color: #4338ca;
+}
+
 .job-details {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -191,5 +196,141 @@
   .job-card__main {
     flex-direction: column;
     align-items: flex-start;
+  }
+}
+
+.program-panel {
+  margin-top: 3.5rem;
+  padding: 2.5rem clamp(1.75rem, 3vw, 3.5rem);
+  background: #ffffff;
+  border-radius: 24px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 30px 50px -35px rgba(15, 23, 42, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.program-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+
+.program-header h2 {
+  margin: 0.4rem 0 0.75rem;
+  font-size: clamp(1.8rem, 2.5vw + 1rem, 2.4rem);
+  color: #0f172a;
+}
+
+.program-error {
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: rgba(248, 113, 113, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #991b1b;
+}
+
+.hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.9rem;
+  color: #b91c1c;
+}
+
+.program-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 1.4rem;
+  margin: 0;
+}
+
+.program-metrics div {
+  padding: 1.2rem 1.4rem;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.08), rgba(59, 130, 246, 0.12));
+  border: 1px solid rgba(59, 130, 246, 0.1);
+}
+
+.program-metrics dt {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #1d4ed8;
+}
+
+.program-metrics dd {
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.program-table-wrapper {
+  overflow-x: auto;
+  border-radius: 18px;
+  border: 1px solid #e2e8f0;
+}
+
+.program-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 720px;
+}
+
+.program-table th,
+.program-table td {
+  padding: 1rem 1.2rem;
+  text-align: left;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 0.95rem;
+}
+
+.program-table th {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: #475569;
+}
+
+.program-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.program-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.2rem 0;
+}
+
+.skeleton {
+  display: inline-block;
+  height: 1.2rem;
+  width: 100px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(148, 163, 184, 0.2), rgba(226, 232, 240, 0.4), rgba(148, 163, 184, 0.2));
+  animation: shimmer 1.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .program-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .program-table {
+    min-width: auto;
   }
 }
