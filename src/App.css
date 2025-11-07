@@ -1,0 +1,195 @@
+.app-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding: 3rem clamp(1.5rem, 4vw, 4rem);
+  margin: 0 auto;
+  max-width: 1080px;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2rem;
+}
+
+.page-header h1 {
+  margin: 0.2rem 0 0.6rem;
+  font-size: clamp(2rem, 3vw + 1rem, 2.8rem);
+  color: #0f172a;
+}
+
+.page-header .subtitle {
+  margin: 0;
+  max-width: 52ch;
+  color: #475569;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+.page-header .eyebrow {
+  margin: 0;
+  letter-spacing: 0.08em;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+.primary-action {
+  align-self: flex-start;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.8rem;
+  background-color: #2563eb;
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 12px 24px -16px rgba(37, 99, 235, 0.9);
+  transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease;
+}
+
+.primary-action:hover,
+.primary-action:focus-visible {
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 16px 28px -18px rgba(29, 78, 216, 0.9);
+}
+
+.primary-action:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.35);
+  outline-offset: 2px;
+}
+
+.job-list {
+  display: grid;
+  gap: 1.8rem;
+}
+
+.job-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1.75rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 18px 38px -32px rgba(15, 23, 42, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.job-card__main {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+.job-card h2 {
+  margin: 0;
+  font-size: 1.35rem;
+  color: #0f172a;
+}
+
+.job-meta {
+  margin: 0.35rem 0 0;
+  display: flex;
+  gap: 0.5rem;
+  color: #64748b;
+  font-size: 0.95rem;
+}
+
+.status {
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: #e2e8f0;
+  color: #1e293b;
+  white-space: nowrap;
+}
+
+.status--on-schedule {
+  background: rgba(34, 197, 94, 0.14);
+  color: #15803d;
+}
+
+.status--needs-attention {
+  background: rgba(249, 115, 22, 0.18);
+  color: #c2410c;
+}
+
+.status--in-procurement {
+  background: rgba(56, 189, 248, 0.18);
+  color: #0e7490;
+}
+
+.status--on-hold {
+  background: rgba(148, 163, 184, 0.22);
+  color: #334155;
+}
+
+.job-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.2rem;
+  margin: 0;
+}
+
+.job-details div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.job-details dt {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.job-details dd {
+  margin: 0;
+  font-size: 0.98rem;
+  color: #1e293b;
+  font-weight: 500;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.progress__bar {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #2563eb 0%, #38bdf8 100%);
+}
+
+.progress span {
+  font-size: 0.85rem;
+  color: #475569;
+  font-weight: 600;
+}
+
+@media (max-width: 720px) {
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .primary-action {
+    width: 100%;
+    text-align: center;
+  }
+
+  .job-card__main {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
